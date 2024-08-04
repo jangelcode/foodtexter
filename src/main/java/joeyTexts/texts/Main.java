@@ -20,11 +20,10 @@ public class Main {
         }
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         String phoneNumber = "+14802951232";
-//        Messages.signUp(phoneNumber);
         Message message = Message.creator(
                 new PhoneNumber(phoneNumber),
                 new PhoneNumber("+17817347405"), // Your Twilio number
-                "Test"
+                "Test2"
         ).create();
     }
 
