@@ -1,35 +1,26 @@
 package joeyTexts.texts;
 
-import com.twilio.twiml.MessagingResponse;
-import com.twilio.twiml.messaging.Body;
-import com.twilio.twiml.messaging.Message;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SmsController {
 
-    @PostMapping("/sms")
-    public String receiveSms(@RequestParam("From") String from,
-                             @RequestParam("Body") String body) {
-        // Process the incoming message
-        System.out.println("Received message from " + from + ": " + body);
+    @GetMapping(value = "/sendSMS")
+    public ResponseEntity<String> sendSMS() {
 
-        // Create a response
-        Body responseBody = new Body
-                .Builder("Thank you for your message!")
-                .build();
-        Message responseMessage = new Message
-                .Builder()
-                .body(responseBody)
-                .build();
-        MessagingResponse response = new MessagingResponse
-                .Builder()
-                .message(responseMessage)
-                .build();
+        Twilio.init(Main.ACCOUNT_SID, Main.AUTH_TOKEN);
 
-        return response.toXml();
+        Message.creator(
+                new PhoneNumber("+14802951232"),
+                new PhoneNumber("+17817347405"),
+                "Hello from Twilio 📞").create();
+        return new ResponseEntity<String>("Message sent successfully", HttpStatus.OK);
     }
 }
 
