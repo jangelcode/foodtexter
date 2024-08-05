@@ -1,34 +1,30 @@
 package joeyTexts.texts;
 
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.twilio.twiml.MessagingResponse;
+import com.twilio.twiml.messaging.Body;
+import com.twilio.twiml.messaging.Message;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/")
 public class SmsController {
 
-    @PostMapping(value = "/sendSMS")
-    public ResponseEntity<String> sendSMS(
-            @RequestParam("to") String toNumber,
-            @RequestParam("from") String fromNumber,
-            @RequestParam("message") String messageContent) {
-        System.out.println(toNumber + " " + fromNumber + " " + messageContent);
+    @GetMapping
+    public String helloWeb() {
+        return "Hello Web";
+    }
 
-        Twilio.init(Main.ACCOUNT_SID, Main.AUTH_TOKEN);
-
-        Message message = Message.creator(
-                new PhoneNumber(fromNumber), // Dynamic to number
-                new PhoneNumber("+17817347405"), // Dynamic from number
-                "Test").create(); // Dynamic message content
-
-        return new ResponseEntity<>("Message sent successfully from " + fromNumber, HttpStatus.OK);
+    @PostMapping(value = "/sms", produces = "application/xml")
+    public String receiveSms(@RequestBody String request) {
+        Body body = new Body.Builder("The Robots are coming! Head for the hills!").build();
+        Message sms = new Message.Builder().body(body).build();
+        MessagingResponse twiml = new MessagingResponse.Builder().message(sms).build();
+        return twiml.toXml();
     }
 }
-
 
 
