@@ -18,7 +18,7 @@ public class SmsController {
         return "Hello Web";
     }
 
-    @PostMapping(value = "/sms", produces = "application/xml")
+    @PostMapping(value = "/sendSMS", produces = "application/xml")
     public String receiveSms(@RequestBody String request) {
         Body body = new Body.Builder("The Robots are coming! Head for the hills!").build();
         Message sms = new Message.Builder().body(body).build();
