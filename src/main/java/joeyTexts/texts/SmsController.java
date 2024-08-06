@@ -11,6 +11,7 @@ public class SmsController {
 
     @GetMapping
     public String helloWeb(@RequestParam("From") String from) {
+        System.out.println(from);
         return from;
     }
 
