@@ -39,7 +39,7 @@ public class DatabaseUtil {
                 exists = true;
             } else {
                 // Insert the phone number if it doesn't exist
-                String insertQuery = "INSERT INTO phonenumbers (phone) VALUES ?";
+                String insertQuery = "INSERT INTO phonenumbers (phone) VALUES (?)";
                 preparedStatement = connection.prepareStatement(insertQuery);
                 preparedStatement.setString(1, phoneNumber);
                 preparedStatement.executeUpdate();
