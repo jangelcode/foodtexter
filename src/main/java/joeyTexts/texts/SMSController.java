@@ -11,7 +11,7 @@ public class SMSController {
     DatabaseUtil dbUtil = new DatabaseUtil();
 
     @PostMapping(value = "/sendSMS", produces = "application/xml")
-    public String receiveSms(@RequestBody String request, @RequestParam("From") String from) {
+    public String receiveSms(@RequestBody String request, @RequestParam("From") String from, @RequestParam("Body") String body) {
         //check if not in cache, and send sign up if not
         if (!Cache.checkInCache(from)){
 //            uncomment for production
@@ -22,6 +22,7 @@ public class SMSController {
             System.out.println("Number added to database");
         }
         else {
+            dbUtil.storeFoodInDatabase(body, from);
             Messages.sendTextMessage(from, ":o");
         }
         return "twiml.toXml()";

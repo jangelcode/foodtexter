@@ -1,6 +1,7 @@
 package joeyTexts.util;
 
 import java.sql.*;
+import java.util.HashSet;
 
 public class DatabaseUtil {
 
@@ -49,5 +50,53 @@ public class DatabaseUtil {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void storeFoodInDatabase(String food, String phoneNumber) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        HashSet<String> setOfFood = extractWords(food);
+        if (setOfFood.isEmpty()){
+            return;
+        }
+
+        try {
+            connection = getConnection();
+            String logFoodQuery = "INSERT INTO foods (phone, food, date) VALUES (?, ?, NOW())";
+            preparedStatement = connection.prepareStatement(logFoodQuery);
+
+            for(String foodItem : setOfFood) {
+                preparedStatement.setString(1, phoneNumber);
+                preparedStatement.setString(2, food);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Proper error handling here
+        } finally {
+            // Close resources
+            try {
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace(); // Proper error handling here
+            }
+        }
+    }
+
+    public static HashSet<String> extractWords(String text) {
+        //split the text on commas, semicolons, or any whitespace characters
+        String[] words = text.split("[,;\\s]+");
+
+        // Create a HashSet to store the words without duplicates
+        HashSet<String> wordSet = new HashSet<>();
+
+        // Iterate over the array of words and add them to the HashSet
+        for (String word : words) {
+            if (!word.isEmpty()) { // Check to make sure the string is not empty
+                wordSet.add(word);
+            }
+        }
+
+        return wordSet;
     }
 }
