@@ -131,6 +131,7 @@ public class DatabaseUtil {
         if (!foodListBuilder.isEmpty()) {
             foodListBuilder.setLength(foodListBuilder.length() - 1);
         }
+        System.out.println(foodListBuilder.toString());
 
         return foodListBuilder.toString();
     }

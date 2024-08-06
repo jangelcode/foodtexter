@@ -12,7 +12,8 @@ public class SMSController {
     public String receiveSms(@RequestBody String request, @RequestParam("From") String from, @RequestParam("Body") String body) {
         //check if not in cache, and send sign up if not
         if (!Cache.checkInCache(from)) {
-            Messages.signUp(from);
+            DatabaseUtil.addNumberToDatabase(from);
+//            Messages.signUp(from);
             Messages.sendTextMessage(from, "Got your number.");
             System.out.println("Number added to cache");
             System.out.println("Number added to database");
@@ -23,6 +24,9 @@ public class SMSController {
                 break;
             case "summary":
                 Messages.sendFoodList(from);
+                break;
+            case "daily":
+                Messages.sendTextMessage(from, "Here is your daily summary:");
                 break;
             case "weekly":
                 Messages.sendTextMessage(from, "Here is your weekly summary:");
