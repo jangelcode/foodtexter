@@ -1,14 +1,12 @@
 package joeyTexts.texts;
 
-import com.twilio.twiml.MessagingResponse;
-import com.twilio.twiml.messaging.Body;
-import com.twilio.twiml.messaging.Message;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/")
-public class SmsController {
+public class SMSController {
 
+    DatabaseUtil dbUtil = new DatabaseUtil();
 //    @GetMapping(value = "/sendSMS")
 //    public String helloWeb(@RequestParam("From") String from) {
 //        System.out.println(from);
@@ -20,7 +18,13 @@ public class SmsController {
 //        Body body = new Body.Builder("The Robots are coming! Head for the hills!").build();
 //        Message sms = new Message.Builder().body(body).build();
 //        MessagingResponse twiml = new MessagingResponse.Builder().message(sms).build();
-        Messages.signUp(from);
+        if (dbUtil.isNumberInDatabase(from)){
+            System.out.println("Already signed up");
+        }
+        else {
+            Messages.signUp(from);
+        }
+        //else don't reply
         System.out.println("here is the text");
         System.out.println(from);
         return "twiml.toXml()";

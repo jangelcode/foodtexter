@@ -10,7 +10,7 @@ public class Messages {
     public static String howToFormat = " Here's an example of how you can format that text, you can either send a message individually such as:";
     public static String apple = "apple";
     public static String howToFormat2 = "Or on separate lines like the below:";
-    public static String foodList = "Apple \n Fries \n Hamburger \n Pepsi";
+    public static String foodList = "Apple\nFries\nHamburger\nPepsi";
     public static String summaryMessage = "At the end of each day/week, we will provide you with insights on what you ate!";
 
     public static void signUp(String phoneNumber) {
