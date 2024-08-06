@@ -22,7 +22,9 @@ public class SMSController {
             System.out.println("Already signed up");
         }
         else {
-            Messages.signUp(from);
+//            uncomment later
+//            Messages.signUp(from);
+            System.out.println("number not in database");
             dbUtil.addNumberIfNotExists(from);
             System.out.println("Number added to database");
         }
