@@ -62,7 +62,7 @@ public class DatabaseUtil {
 
         try {
             connection = getConnection();
-            String logFoodQuery = "INSERT INTO foods (phone, food, date) VALUES (?, ?, NOW())";
+            String logFoodQuery = "INSERT INTO foods (phone, food, recorded_at) VALUES (?, ?, NOW())";
             preparedStatement = connection.prepareStatement(logFoodQuery);
 
             for(String foodItem : setOfFood) {
