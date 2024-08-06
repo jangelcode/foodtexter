@@ -1,4 +1,4 @@
-package joeyTexts.texts;
+package joeyTexts.util;
 
 import java.sql.*;
 
@@ -13,7 +13,6 @@ public class DatabaseUtil {
     }
 
     public boolean isNumberInDatabase(String phoneNumber) {
-        int count = 0;
         boolean exists = false;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -27,12 +26,8 @@ public class DatabaseUtil {
             String selectQuery = "SELECT * FROM phonenumbers WHERE phone = ?";
             preparedStatement = connection.prepareStatement(selectQuery);
             preparedStatement.setString(1, phoneNumber);
-
-            // Execute the query
             resultSet = preparedStatement.executeQuery();
 
-//            count = resultSet.getInt(1); // getInt(1) gets the first column of the result set
-//            System.out.println("This is the count: " + count);
 
             // Check if a result was returned
             if (resultSet.next()) {
@@ -43,7 +38,7 @@ public class DatabaseUtil {
                 preparedStatement = connection.prepareStatement(insertQuery);
                 preparedStatement.setString(1, phoneNumber);
                 preparedStatement.executeUpdate();
-                exists = false; // phone number was not in the database but now it is added
+                exists = false;
             }
 
         } catch (SQLException e) {

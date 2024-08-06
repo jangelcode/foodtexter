@@ -26,7 +26,7 @@ public class Messages {
         }
     }
 
-    private static void sendTextMessage(String to, String body) {
+    public static void sendTextMessage(String to, String body) {
         Twilio.init(Main.ACCOUNT_SID, Main.AUTH_TOKEN);
 
         Message message = Message.creator(

@@ -1,5 +1,7 @@
 package joeyTexts.texts;
 
+import joeyTexts.util.DatabaseUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
