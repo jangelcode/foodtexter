@@ -108,7 +108,7 @@ public class DatabaseUtil {
 
         try {
             connection = getConnection();
-            String queryUserDailyFoods = "SELECT food FROM foods WHERE phone = ? AND WHERE DATE(recorded_at) = CURRENT_DATE";
+            String queryUserDailyFoods = "SELECT food FROM foods WHERE phone = ? AND DATE(recorded_at) = CURRENT_DATE";
             preparedStatement = connection.prepareStatement(queryUserDailyFoods);
             preparedStatement.setString(1, phoneNumber);
             resultSet = preparedStatement.executeQuery();
