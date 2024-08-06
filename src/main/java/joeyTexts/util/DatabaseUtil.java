@@ -85,7 +85,7 @@ public class DatabaseUtil {
 
     public static HashSet<String> extractWords(String text) {
         //split the text on commas, semicolons, or any whitespace characters
-        String[] words = text.split("[,;\\s]+");
+        String[] words = text.split("[,\n]+");
 
         // Create a HashSet to store the words without duplicates
         HashSet<String> wordSet = new HashSet<>();
@@ -137,5 +137,25 @@ public class DatabaseUtil {
         System.out.println(foodListBuilder.toString());
 
         return foodListBuilder.toString();
+    }
+
+    public static boolean deleteEntry(String phoneNumber, String foodToDelete){
+        String query = "DELETE FROM foods WHERE food = (SELECT food FROM foods WHERE phone = ? AND LOWER(food) = ? ORDER BY recorded_at DESC LIMIT 1)";
+
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, phoneNumber);
+            stmt.setString(2, foodToDelete.toLowerCase());
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0){
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

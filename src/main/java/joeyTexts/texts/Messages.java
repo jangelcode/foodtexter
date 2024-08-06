@@ -51,5 +51,14 @@ public class Messages {
         sendTextMessage(to, DatabaseUtil.getDailyFood(to));
     }
 
+    public static void deleteEntry(String to, String foodToDelete){
+        boolean deleted = DatabaseUtil.deleteEntry(to, foodToDelete);
+        if (deleted) {
+            sendTextMessage(to, "The most recent instance of " + foodToDelete + " has been deleted.");
+        } else {
+            Messages.sendTextMessage(to, "No recent instance of " + foodToDelete + " found to delete.");
+        }
+    }
+
 }
 

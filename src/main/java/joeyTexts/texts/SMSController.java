@@ -32,7 +32,16 @@ public class SMSController {
                 Messages.sendTextMessage(from, "Here is your weekly summary:");
                 break;
             default:
-                DatabaseUtil.storeFoodInDatabase(body, from);
+                if (body.toLowerCase().startsWith("delete ")) {
+                    String foodToDelete = body.substring(7).trim();
+                    if (!foodToDelete.isEmpty()) {
+                        // Call a method to delete the most recent instance of the specified food item
+                        Messages.deleteEntry(from, foodToDelete);
+                    }
+                }
+                else {
+                    DatabaseUtil.storeFoodInDatabase(body, from);
+                }
                 break;
         }
         return "twiml.toXml()";
