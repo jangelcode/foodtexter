@@ -13,7 +13,7 @@ public class DatabaseUtil {
     }
 
     public boolean isNumberInDatabase(String phoneNumber) {
-        String query = "SELECT 1 FROM phonenumbers WHERE phoneNumber = " + phoneNumber;
+        String query = "SELECT 1 FROM phonenumbers WHERE phone = " + phoneNumber;
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
@@ -24,6 +24,24 @@ public class DatabaseUtil {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public boolean addNumberIfNotExists(String phoneNumber) {
+        if (!isNumberInDatabase(phoneNumber)) {
+            String insertQuery = "INSERT INTO phonenumbers (phone) VALUES " + phoneNumber;
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement(insertQuery)) {
+
+                statement.setString(1, phoneNumber);
+                int rowsInserted = statement.executeUpdate();
+                return rowsInserted > 0; // returns true if the insertion was successful
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            return false; // Phone number already exists in the database
         }
     }
 }

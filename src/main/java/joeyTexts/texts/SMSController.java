@@ -23,6 +23,8 @@ public class SMSController {
         }
         else {
             Messages.signUp(from);
+            dbUtil.addNumberIfNotExists(from);
+            System.out.println("Number added to database");
         }
         //else don't reply
         System.out.println("here is the text");
