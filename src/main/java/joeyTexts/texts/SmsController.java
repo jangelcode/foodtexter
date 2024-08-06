@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class SmsController {
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "/sendSMS")
     public String helloWeb(@RequestParam("From") String from) {
         System.out.println(from);
         return from;
