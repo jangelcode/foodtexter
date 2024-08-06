@@ -1,5 +1,6 @@
 package joeyTexts.texts;
 
+import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
@@ -26,6 +27,8 @@ public class Messages {
     }
 
     private static void sendTextMessage(String to, String body) {
+        Twilio.init(Main.ACCOUNT_SID, Main.AUTH_TOKEN);
+
         Message message = Message.creator(
                 new PhoneNumber(to),
                 new PhoneNumber("+17817347405"), // Your Twilio number
