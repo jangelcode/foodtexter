@@ -52,7 +52,7 @@ public class DatabaseUtil {
         }
     }
 
-    public void storeFoodInDatabase(String food, String phoneNumber) {
+    public static void storeFoodInDatabase(String food, String phoneNumber) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         HashSet<String> setOfFood = extractWords(food);

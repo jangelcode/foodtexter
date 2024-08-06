@@ -31,6 +31,9 @@ public class SMSController {
             case "weekly":
                 Messages.sendTextMessage(from, "Here is your weekly summary:");
                 break;
+            default:
+                DatabaseUtil.storeFoodInDatabase(body, from);
+                break;
         }
         return "twiml.toXml()";
     }
