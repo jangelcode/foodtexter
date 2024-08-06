@@ -16,9 +16,11 @@ public class SMSController {
         if (!Cache.checkInCache(from)){
             Messages.signUp(from);
             System.out.println("Number added to cache");
+            dbUtil.addNumberToDatabase(from);
+            System.out.println("Number added to database");
         }
         else {
-            Messages.sendTextMessage(from, "Confirmed");
+            Messages.sendTextMessage(from, "\uD83D\uDC4D");
         }
         return "twiml.toXml()";
     }

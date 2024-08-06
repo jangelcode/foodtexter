@@ -12,8 +12,7 @@ public class DatabaseUtil {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    public boolean isNumberInDatabase(String phoneNumber) {
-        boolean exists = false;
+    public void addNumberToDatabase(String phoneNumber) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -30,15 +29,12 @@ public class DatabaseUtil {
 
 
             // Check if a result was returned
-            if (resultSet.next()) {
-                exists = true;
-            } else {
+            if (!resultSet.next()) {
                 // Insert the phone number if it doesn't exist
                 String insertQuery = "INSERT INTO phonenumbers (phone) VALUES (?)";
                 preparedStatement = connection.prepareStatement(insertQuery);
                 preparedStatement.setString(1, phoneNumber);
                 preparedStatement.executeUpdate();
-                exists = false;
             }
 
         } catch (SQLException e) {
@@ -53,6 +49,5 @@ public class DatabaseUtil {
                 e.printStackTrace();
             }
         }
-        return exists;
     }
 }
