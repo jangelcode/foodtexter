@@ -13,6 +13,7 @@ public class DatabaseUtil {
     }
 
     public boolean isNumberInDatabase(String phoneNumber) {
+        int count = 0;
         boolean exists = false;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -23,19 +24,22 @@ public class DatabaseUtil {
             connection = getConnection();
 
             // Prepare the SELECT query
-            String selectQuery = "SELECT * FROM phonenumbers WHERE phone = '+14802951232'";
+            String selectQuery = "SELECT Count(*) FROM phonenumbers WHERE phone = ?";
             preparedStatement = connection.prepareStatement(selectQuery);
             preparedStatement.setString(1, phoneNumber);
 
             // Execute the query
             resultSet = preparedStatement.executeQuery();
 
+            count = resultSet.getInt(1); // getInt(1) gets the first column of the result set
+            System.out.println("This is the count: " + count);
+
             // Check if a result was returned
             if (resultSet.next()) {
                 exists = true;
             } else {
                 // Insert the phone number if it doesn't exist
-                String insertQuery = "INSERT INTO phonenumbers (phone) VALUES ('+14802951232')";
+                String insertQuery = "INSERT INTO phonenumbers (phone) VALUES ?";
                 preparedStatement = connection.prepareStatement(insertQuery);
                 preparedStatement.setString(1, phoneNumber);
                 preparedStatement.executeUpdate();
