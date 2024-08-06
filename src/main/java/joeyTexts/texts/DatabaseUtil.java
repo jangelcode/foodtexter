@@ -13,7 +13,7 @@ public class DatabaseUtil {
     }
 
     public boolean isNumberInDatabase(String phoneNumber) {
-        String query = "SELECT 1 FROM phonenumbers WHERE phone = " + phoneNumber;
+        String query = "SELECT * FROM phonenumbers WHERE phone = '+14802951232'";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
@@ -29,7 +29,7 @@ public class DatabaseUtil {
 
     public boolean addNumberIfNotExists(String phoneNumber) {
         if (!isNumberInDatabase(phoneNumber)) {
-            String insertQuery = "INSERT INTO phonenumbers (phone) VALUES " + phoneNumber;
+            String insertQuery = "INSERT INTO phonenumbers (phone) VALUES ('+14802951232')";
             try (Connection connection = getConnection();
                  PreparedStatement statement = connection.prepareStatement(insertQuery)) {
 
