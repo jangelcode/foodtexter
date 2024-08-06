@@ -13,35 +13,47 @@ public class DatabaseUtil {
     }
 
     public boolean isNumberInDatabase(String phoneNumber) {
-        String query = "SELECT * FROM phonenumbers WHERE phone = '+14802951232'";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        boolean exists = false;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
-            statement.setString(1, phoneNumber);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                return resultSet.next(); // returns true if a row exists, false otherwise
+        try {
+            // Establish connection
+            connection = getConnection();
+
+            // Prepare the SELECT query
+            String selectQuery = "SELECT * FROM phonenumbers WHERE phone = '+14802951232'";
+            preparedStatement = connection.prepareStatement(selectQuery);
+            preparedStatement.setString(1, phoneNumber);
+
+            // Execute the query
+            resultSet = preparedStatement.executeQuery();
+
+            // Check if a result was returned
+            if (resultSet.next()) {
+                exists = true;
+            } else {
+                // Insert the phone number if it doesn't exist
+                String insertQuery = "INSERT INTO phonenumbers (phone) VALUES ('+14802951232')";
+                preparedStatement = connection.prepareStatement(insertQuery);
+                preparedStatement.setString(1, phoneNumber);
+                preparedStatement.executeUpdate();
+                exists = false; // phone number was not in the database but now it is added
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean addNumberIfNotExists(String phoneNumber) {
-        if (!isNumberInDatabase(phoneNumber)) {
-            String insertQuery = "INSERT INTO phonenumbers (phone) VALUES ('+14802951232')";
-            try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement(insertQuery)) {
-
-                statement.setString(1, phoneNumber);
-                int rowsInserted = statement.executeUpdate();
-                return rowsInserted > 0; // returns true if the insertion was successful
+        } finally {
+            // Close the resources
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                return false;
             }
-        } else {
-            return false; // Phone number already exists in the database
         }
+        return exists;
     }
 }

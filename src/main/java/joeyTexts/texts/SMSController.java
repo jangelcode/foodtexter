@@ -25,7 +25,6 @@ public class SMSController {
 //            uncomment later
 //            Messages.signUp(from);
             System.out.println("number not in database");
-            dbUtil.addNumberIfNotExists(from);
             System.out.println("Number added to database");
         }
         //else don't reply
