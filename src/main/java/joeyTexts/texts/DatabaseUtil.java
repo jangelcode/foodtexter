@@ -24,7 +24,7 @@ public class DatabaseUtil {
             connection = getConnection();
 
             // Prepare the SELECT query
-            String selectQuery = "SELECT Count(*) FROM phonenumbers WHERE phone = ?";
+            String selectQuery = "SELECT * FROM phonenumbers WHERE phone = ?";
             preparedStatement = connection.prepareStatement(selectQuery);
             preparedStatement.setString(1, phoneNumber);
 
