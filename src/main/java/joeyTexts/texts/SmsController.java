@@ -9,19 +9,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class SmsController {
 
-    @GetMapping(value = "/sendSMS")
-    public String helloWeb(@RequestParam("From") String from) {
-        System.out.println(from);
-        return from;
-    }
+//    @GetMapping(value = "/sendSMS")
+//    public String helloWeb(@RequestParam("From") String from) {
+//        System.out.println(from);
+//        return receiveSms();
+//    }
 
     @PostMapping(value = "/sendSMS", produces = "application/xml")
-    public String receiveSms(@RequestBody String request) {
-        Body body = new Body.Builder("The Robots are coming! Head for the hills!").build();
-        Message sms = new Message.Builder().body(body).build();
-        MessagingResponse twiml = new MessagingResponse.Builder().message(sms).build();
+    public String receiveSms(@RequestBody String request, @RequestParam("From") String from) {
+//        Body body = new Body.Builder("The Robots are coming! Head for the hills!").build();
+//        Message sms = new Message.Builder().body(body).build();
+//        MessagingResponse twiml = new MessagingResponse.Builder().message(sms).build();
+        Messages.signUp(from);
         System.out.println("here is the text");
-        return twiml.toXml();
+        System.out.println(from);
+        return "twiml.toXml()";
     }
 }
 
