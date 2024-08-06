@@ -108,7 +108,7 @@ public class DatabaseUtil {
 
         try {
             connection = getConnection();
-            String queryUserDailyFoods = "SELECT food FROM foods WHERE phone = ? AND DATE(recorded_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/New_York') = CURRENT_DATE AT TIME ZONE 'America/New_York'";
+            String queryUserDailyFoods = "SELECT food FROM foods WHERE phone = ? AND WHERE DATE(recorded_at) = CURRENT_DATE";
             preparedStatement = connection.prepareStatement(queryUserDailyFoods);
             preparedStatement.setString(1, phoneNumber);
             resultSet = preparedStatement.executeQuery();
@@ -130,6 +130,9 @@ public class DatabaseUtil {
         }
         if (!foodListBuilder.isEmpty()) {
             foodListBuilder.setLength(foodListBuilder.length() - 1);
+        }
+        else {
+            return "No foods logged today.";
         }
         System.out.println(foodListBuilder.toString());
 
