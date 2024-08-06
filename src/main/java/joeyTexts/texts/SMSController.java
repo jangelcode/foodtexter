@@ -19,7 +19,7 @@ public class SMSController {
             System.out.println("Number added to database");
         }
         switch (body.toLowerCase()) {
-            case "help":
+            case "commands":
                 Messages.setSendHelpText(from);
                 break;
             case "summary":

@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 public class Cache {
 
-    private static final HashSet<String> cache = new HashSet<>();
+    private static final HashSet<String> cache = DatabaseUtil.retrievePhoneNumbers();
 
     public static boolean checkInCache(String phoneNumber) {
         if (!cache.contains(phoneNumber)) {

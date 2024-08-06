@@ -14,56 +14,37 @@ public class DatabaseUtil {
     }
 
     public static void addNumberToDatabase(String phoneNumber) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        String selectQuery = "SELECT * FROM phonenumbers WHERE phone = ?";
+        String insertQuery = "INSERT INTO phonenumbers (phone) VALUES (?)";
 
-        try {
-            // Establish connection
-            connection = getConnection();
+        try (Connection connection = getConnection();
+             PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
+             PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
 
-            // Prepare the SELECT query
-            String selectQuery = "SELECT * FROM phonenumbers WHERE phone = ?";
-            preparedStatement = connection.prepareStatement(selectQuery);
-            preparedStatement.setString(1, phoneNumber);
-            resultSet = preparedStatement.executeQuery();
-
-
-            // Check if a result was returned
-            if (!resultSet.next()) {
-                // Insert the phone number if it doesn't exist
-                String insertQuery = "INSERT INTO phonenumbers (phone) VALUES (?)";
-                preparedStatement = connection.prepareStatement(insertQuery);
-                preparedStatement.setString(1, phoneNumber);
-                preparedStatement.executeUpdate();
+            // Set the phone number parameter in the SELECT statement
+            selectStatement.setString(1, phoneNumber);
+            try (ResultSet resultSet = selectStatement.executeQuery()) {
+                // Check if the phone number exists in the database
+                if (!resultSet.next()) {
+                    // Set the phone number parameter in the INSERT statement and execute the update
+                    insertStatement.setString(1, phoneNumber);
+                    insertStatement.executeUpdate();
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            // Close the resources
-            try {
-                if (resultSet != null) resultSet.close();
-                if (preparedStatement != null) preparedStatement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
+
     public static void storeFoodInDatabase(String food, String phoneNumber) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
+        String logFoodQuery = "INSERT INTO foods (phone, food, recorded_at) VALUES (?, ?, NOW())";
         HashSet<String> setOfFood = extractWords(food);
         if (setOfFood.isEmpty()){
             return;
         }
 
-        try {
-            connection = getConnection();
-            String logFoodQuery = "INSERT INTO foods (phone, food, recorded_at) VALUES (?, ?, NOW())";
-            preparedStatement = connection.prepareStatement(logFoodQuery);
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(logFoodQuery)){
 
             for(String foodItem : setOfFood) {
                 preparedStatement.setString(1, phoneNumber);
@@ -72,14 +53,6 @@ public class DatabaseUtil {
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Proper error handling here
-        } finally {
-            // Close resources
-            try {
-                if (preparedStatement != null) preparedStatement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace(); // Proper error handling here
-            }
         }
     }
 
@@ -102,14 +75,10 @@ public class DatabaseUtil {
 
     public static String getDailyFood(String phoneNumber) {
         StringBuilder foodListBuilder = new StringBuilder();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
+        String queryUserDailyFoods = "SELECT food FROM foods WHERE phone = ? AND DATE(recorded_at) = CURRENT_DATE";
         ResultSet resultSet = null;
 
-        try {
-            connection = getConnection();
-            String queryUserDailyFoods = "SELECT food FROM foods WHERE phone = ? AND DATE(recorded_at) = CURRENT_DATE";
-            preparedStatement = connection.prepareStatement(queryUserDailyFoods);
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(queryUserDailyFoods)) {
             preparedStatement.setString(1, phoneNumber);
             resultSet = preparedStatement.executeQuery();
 
@@ -119,14 +88,6 @@ public class DatabaseUtil {
             }
         } catch (SQLException e){
             e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (preparedStatement != null) preparedStatement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace(); // Proper error handling should be implemented here
-            }
         }
         if (!foodListBuilder.isEmpty()) {
             foodListBuilder.setLength(foodListBuilder.length() - 1);
@@ -142,13 +103,13 @@ public class DatabaseUtil {
     public static boolean deleteEntry(String phoneNumber, String foodToDelete){
         String query = "DELETE FROM foods WHERE food = (SELECT food FROM foods WHERE phone = ? AND LOWER(food) = ? ORDER BY recorded_at DESC LIMIT 1)";
 
-        try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection connection = DatabaseUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            stmt.setString(1, phoneNumber);
-            stmt.setString(2, foodToDelete.toLowerCase());
+            preparedStatement.setString(1, phoneNumber);
+            preparedStatement.setString(2, foodToDelete.toLowerCase());
 
-            int rowsAffected = stmt.executeUpdate();
+            int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0){
                 return true;
             }
@@ -158,4 +119,23 @@ public class DatabaseUtil {
         }
         return false;
     }
+
+    public static HashSet<String> retrievePhoneNumbers(){
+        ResultSet resultSet = null;
+        HashSet<String> phoneNumbers = new HashSet<>();
+        String distinctPhoneNumbers = "SELECT DISTINCT phone FROM phonenumbers";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(distinctPhoneNumbers))
+        {
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                phoneNumbers.add(resultSet.getString("phone"));
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return phoneNumbers;
+    }
+
 }
