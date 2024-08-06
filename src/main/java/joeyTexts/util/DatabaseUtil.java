@@ -67,7 +67,7 @@ public class DatabaseUtil {
 
             for(String foodItem : setOfFood) {
                 preparedStatement.setString(1, phoneNumber);
-                preparedStatement.setString(2, food);
+                preparedStatement.setString(2, foodItem);
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
