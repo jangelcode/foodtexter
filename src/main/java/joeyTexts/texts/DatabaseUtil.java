@@ -31,8 +31,8 @@ public class DatabaseUtil {
             // Execute the query
             resultSet = preparedStatement.executeQuery();
 
-            count = resultSet.getInt(1); // getInt(1) gets the first column of the result set
-            System.out.println("This is the count: " + count);
+//            count = resultSet.getInt(1); // getInt(1) gets the first column of the result set
+//            System.out.println("This is the count: " + count);
 
             // Check if a result was returned
             if (resultSet.next()) {
