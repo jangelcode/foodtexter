@@ -13,7 +13,7 @@ public class DatabaseUtil {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    public void addNumberToDatabase(String phoneNumber) {
+    public static void addNumberToDatabase(String phoneNumber) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -98,5 +98,40 @@ public class DatabaseUtil {
         }
 
         return wordSet;
+    }
+
+    public static String getDailyFood(String phoneNumber) {
+        StringBuilder foodListBuilder = new StringBuilder();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+            String queryUserDailyFoods = "SELECT food FROM foods WHERE phone = ? AND DATE(recorded_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/New_York') = CURRENT_DATE AT TIME ZONE 'America/New_York'";
+            preparedStatement = connection.prepareStatement(queryUserDailyFoods);
+            preparedStatement.setString(1, phoneNumber);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String food = resultSet.getString("food");
+                foodListBuilder.append(food).append("\n");
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace(); // Proper error handling should be implemented here
+            }
+        }
+        if (!foodListBuilder.isEmpty()) {
+            foodListBuilder.setLength(foodListBuilder.length() - 1);
+        }
+
+        return foodListBuilder.toString();
     }
 }

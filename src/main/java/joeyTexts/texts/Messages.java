@@ -3,24 +3,30 @@ package joeyTexts.texts;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import joeyTexts.util.DatabaseUtil;
 
 public class Messages {
-    public static String pleaseRepeatMessage = "Please repeat your message";
-    public static String welcomeMessage = "Hi, welcome to the Food Texter! Whenever you eat something, please send us a text of what you ate.";
-    public static String howToFormat = " Here's an example of how you can format that text, you can either send a message individually such as:";
-    public static String apple = "apple";
-    public static String howToFormat2 = "Or on separate lines like the below:";
-    public static String foodList = "Apple\nFries\nHamburger\nPepsi";
-    public static String summaryMessage = "At the end of each day/week, we will provide you with insights on what you ate!";
+    private final static String pleaseRepeatMessage = "Please repeat your message";
+    private final static String welcomeMessage = "Hi, welcome to the Food Texter! Whenever you eat something, please send us a text of what you ate.";
+    private final static String howToFormat = "Here's an example of how you can format that text, you can either send a message individually such as:";
+    private final static String apple = "Apple";
+    private final static String howToFormat2 = "Or on separate lines like the below:";
+    private final static String foodList = "Apple\nFries\nHamburger\nPepsi";
+    private final static String summaryMessage = "At the end of each day/week, we will provide you with insights on what you ate!";
+    private final static String sendHelpText = "Text HELP to see a list of commands.";
+    private final static String helpText = "List of Commands\nSummary: Sends the foods you've eaten today.\nDone: Sends a report of all the foods you've eaten in the past day. (Can only be sent once a day)";
+
 
     public static void signUp(String phoneNumber) {
         try {
+            DatabaseUtil.addNumberToDatabase(phoneNumber);
             sendTextMessage(phoneNumber, welcomeMessage);
             sendTextMessage(phoneNumber, howToFormat);
             sendTextMessage(phoneNumber, apple);
             sendTextMessage(phoneNumber, howToFormat2);
             sendTextMessage(phoneNumber, foodList);
             sendTextMessage(phoneNumber, summaryMessage);
+            sendTextMessage(phoneNumber, sendHelpText);
         } catch (Exception e) {
             System.err.println("Failed to send message: " + e.getMessage());
         }
@@ -36,5 +42,14 @@ public class Messages {
         ).create();
         System.out.println("Message status: " + message.getStatus());
     }
+
+    public static void setSendHelpText(String to){
+        sendTextMessage(to, sendHelpText);
+    }
+
+    public static void sendFoodList(String to){
+        sendTextMessage(to, DatabaseUtil.getDailyFood(to));
+    }
+
 }
 
