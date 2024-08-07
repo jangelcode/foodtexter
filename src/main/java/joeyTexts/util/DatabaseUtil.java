@@ -38,7 +38,7 @@ public class DatabaseUtil {
 
 
     public static void storeFoodInDatabase(String food, String phoneNumber) {
-        String logFoodQuery = "INSERT INTO foods (phone, food, recorded_at) VALUES (?, ?, NOW())";
+        String logFoodQuery = "INSERT INTO foods (phone, food, recorded_at) VALUES (?, ?, NOW() AT TIME ZONE 'MST' AT TIME ZONE 'UTC')";
         HashSet<String> setOfFood = extractWords(food);
         if (setOfFood.isEmpty()){
             return;
@@ -137,5 +137,6 @@ public class DatabaseUtil {
         }
         return phoneNumbers;
     }
+
 
 }
