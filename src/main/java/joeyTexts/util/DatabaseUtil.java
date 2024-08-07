@@ -75,7 +75,7 @@ public class DatabaseUtil {
 
     public static String getDailyFood(String phoneNumber) {
         StringBuilder foodListBuilder = new StringBuilder();
-        String queryUserDailyFoods = "SELECT food FROM foods WHERE phone = ? AND DATE(recorded_at) = CURRENT_DATE";
+        String queryUserDailyFoods = "SELECT food FROM foods WHERE phone = ? AND DATE(recorded_at AT TIME ZONE 'UTC' AT TIME ZONE 'MST') = CURRENT_DATE AT TIME ZONE 'MST'";
         ResultSet resultSet = null;
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(queryUserDailyFoods)) {
