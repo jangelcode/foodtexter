@@ -23,6 +23,10 @@ public class SMSController {
             System.out.println("Number added to cache");
             System.out.println("Number added to database");
         }
+        if (body.toLowerCase().contains("delete") || Cache.isDeleteMode(from)) {
+            handleDeleteRequest(from, body.toLowerCase());
+            return "twiml.toXml()";
+        }
         switch (body.toLowerCase()) {
             case "commands":
                 Messages.setSendHelpText(from);
@@ -37,18 +41,30 @@ public class SMSController {
                 Messages.sendTextMessage(from, dataAnalyzer.getWeeklyFoods(from));
                 break;
             default:
-                if (body.toLowerCase().startsWith("delete ")) {
-                    String foodToDelete = body.substring(7).trim();
-                    if (!foodToDelete.isEmpty()) {
-                        // Call a method to delete the most recent instance of the specified food item
-                        Messages.deleteEntry(from, foodToDelete);
-                    }
-                }
-                else {
-                    DatabaseUtil.storeFoodInDatabase(body, from);
-                }
+                DatabaseUtil.storeFoodInDatabase(body, from);
                 break;
         }
         return "twiml.toXml()";
+    }
+
+    private void handleDeleteRequest(String from, String body) {
+        if (Cache.isDeleteMode(from)){
+            Messages.deleteEntry(from, body);
+            Cache.setDeleteModeFalse(from);
+        }
+        else if (body.startsWith("delete ")) {
+            String foodToDelete = body.substring(7).trim();
+            if (!foodToDelete.isEmpty()) {
+                Messages.deleteEntry(from, foodToDelete);
+            }
+            Cache.setDeleteModeFalse(from);
+        }
+        else if (body.toLowerCase().trim().equals("delete")){
+            Messages.sendTextMessage(from, "Please text the food you would like to delete.");
+            Cache.setDeleteMode(from);
+        }
+        else {
+            Messages.sendTextMessage(from, "Invalid format. Please use the format 'delete [food name]'.");
+        }
     }
 }

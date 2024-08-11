@@ -14,7 +14,7 @@ public class Messages {
     private final static String foodList = "Apple\nFries\nHamburger\nPepsi";
     private final static String summaryMessage = "At the end of each day/week, we will provide you with insights on what you ate!";
     private final static String sendHelpText = "Text COMMANDS to see a list of commands.";
-    private final static String listOfCommands = "List of Commands\nSummary: Sends the foods you've eaten today.\nDone: Sends a report of all the foods you've eaten in the past day. (Can only be sent once a day)\nDelete: deletes the most recent instance of a food you specify. ex: 'Delete Pizza'.";
+    private final static String listOfCommands = "List of Commands\nDaily: Sends the foods you've eaten today.\nWeekly: Sends the foods you've eaten this week\nDelete: deletes the most recent instance of a food you specify. ex: 'Delete Pizza'.";
 
 
     public static void signUp(String phoneNumber) {

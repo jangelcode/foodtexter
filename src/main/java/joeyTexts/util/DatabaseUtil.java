@@ -1,6 +1,7 @@
 package joeyTexts.util;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class DatabaseUtil {
@@ -120,19 +121,19 @@ public class DatabaseUtil {
         return false;
     }
 
-    public static HashSet<String> retrievePhoneNumbers(){
+    public static HashMap<String, Boolean> retrievePhoneNumbers() {
         ResultSet resultSet = null;
-        HashSet<String> phoneNumbers = new HashSet<>();
+        HashMap<String, Boolean> phoneNumbers = new HashMap<>();
         String distinctPhoneNumbers = "SELECT DISTINCT phone FROM phonenumbers";
 
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(distinctPhoneNumbers))
-        {
+             PreparedStatement preparedStatement = connection.prepareStatement(distinctPhoneNumbers)) {
             resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                phoneNumbers.add(resultSet.getString("phone"));
+            while (resultSet.next()) {
+                // Add each phone number to the map with a default delete mode status of false
+                phoneNumbers.put(resultSet.getString("phone"), false);
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return phoneNumbers;
