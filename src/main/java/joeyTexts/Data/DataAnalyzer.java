@@ -13,7 +13,7 @@ public class DataAnalyzer {
     }
 
     public String getWeeklyFoods(String phoneNumber) {
-        String weeklyFoodsQuery = "Select food FROM foods WHERE phone = ? recorded_at BETWEEN (NOW() AT TIME ZONE 'MST' - INTERVAL '7 days') AND NOW() AT TIME ZONE 'MST'";
+        String weeklyFoodsQuery = "Select food FROM foods WHERE phone = ? AND recorded_at BETWEEN (NOW() AT TIME ZONE 'MST' - INTERVAL '7 days') AND NOW() AT TIME ZONE 'MST'";
         StringBuilder foodsResult = new StringBuilder();
 
         try (Connection connection = getConnection();
