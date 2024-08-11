@@ -55,7 +55,7 @@ public class SMSController {
         else if (body.startsWith("delete ")) {
             String foodToDelete = body.substring(7).trim();
             if (!foodToDelete.isEmpty()) {
-                Messages.deleteEntry(from, body);
+                Messages.deleteEntry(from, foodToDelete);
             }
             Cache.setDeleteModeFalse(from);
         }
