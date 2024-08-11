@@ -24,8 +24,8 @@ public class DataAnalyzer {
                 // Check if the phone number exists in the database
                 if (!resultSet.next()) {
                     // Set the phone number parameter in the INSERT statement and execute the update
-                    insertStatement.setString(1, phoneNumber);
-                    insertStatement.executeUpdate();
+                    selectStatement.setString(1, phoneNumber);
+                    selectStatement.executeUpdate();
                 }
             }
         } catch (SQLException e) {
