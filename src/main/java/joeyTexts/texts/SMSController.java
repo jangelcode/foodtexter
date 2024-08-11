@@ -32,14 +32,14 @@ public class SMSController {
                 Messages.setSendHelpText(from);
                 break;
             case "summary":
-                Messages.sendFoodList(from);
-                break;
             case "daily":
-                Messages.sendTextMessage(from, "Here is your daily summary:");
+                Messages.sendFoodList(from);
                 break;
             case "weekly":
                 Messages.sendTextMessage(from, dataAnalyzer.getWeeklyFoods(from));
                 break;
+            case "insights":
+                Messages.sendTextMessage(from, dataAnalyzer.analyzeWeeklyFoods(from, dataAnalyzer.getWeeklyFoods(from)));
             default:
                 DatabaseUtil.storeFoodInDatabase(body, from);
                 break;
