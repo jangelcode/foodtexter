@@ -28,7 +28,7 @@ public class DataAnalyzer {
                     if (foodsResult.length() > 0) {
                         foodsResult.append("\n");
                     }
-                    foodsResult.append(resultSet.getString("food_name"));
+                    foodsResult.append(resultSet.getString("food"));
                 }
             }
         } catch (SQLException e) {
