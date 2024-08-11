@@ -55,11 +55,11 @@ public class SMSController {
         else if (body.startsWith("delete ")) {
             String foodToDelete = body.substring(7).trim();
             if (!foodToDelete.isEmpty()) {
-                Messages.deleteEntry(from, foodToDelete);
+                Messages.deleteEntry(from, body);
             }
             Cache.setDeleteModeFalse(from);
         }
-        else if (body.toLowerCase().trim().equals("delete")){
+        else if (body.trim().equals("delete")){
             Messages.sendTextMessage(from, "Please text the food you would like to delete.");
             Cache.setDeleteMode(from);
         }

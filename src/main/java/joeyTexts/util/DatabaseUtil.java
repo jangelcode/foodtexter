@@ -91,13 +91,17 @@ public class DatabaseUtil {
     }
 
     public static boolean deleteEntry(String phoneNumber, String foodToDelete){
-        String query = "DELETE FROM foods WHERE food = (SELECT food FROM foods WHERE phone = ? AND LOWER(food) = ? ORDER BY recorded_at DESC LIMIT 1)";
+        String query = "DELETE FROM foods WHERE phone = ? AND LOWER(food) = ? AND recorded_at = ("
+                + "SELECT recorded_at FROM foods WHERE phone = ? AND LOWER(food) = ? "
+                + "ORDER BY recorded_at DESC LIMIT 1)";
 
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, phoneNumber);
             preparedStatement.setString(2, foodToDelete.toLowerCase());
+            preparedStatement.setString(3, phoneNumber);
+            preparedStatement.setString(4, foodToDelete.toLowerCase());
 
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0){
