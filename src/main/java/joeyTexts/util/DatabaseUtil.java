@@ -5,9 +5,9 @@ import java.util.HashSet;
 
 public class DatabaseUtil {
 
-    private static final String URL = "jdbc:postgresql://cd1goc44htrmfn.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/ddasd54vutrh71";
-    private static final String USER = "u8u6n5jevrfgcr";
-    private static final String PASSWORD = "p25123c225b25505c76201377b2de2e33120982e75f73c8454db8d4f3918017af";
+    private static final String URL = System.getenv("POSTGRES_URL");
+    private static final String USER = System.getenv("POSTGRES_USER");
+    private static final String PASSWORD = System.getenv("POSTGRES_PASSWORD");
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);

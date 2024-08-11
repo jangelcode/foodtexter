@@ -13,7 +13,7 @@ public class Messages {
     private final static String howToFormat2 = "Or on separate lines like the below:";
     private final static String foodList = "Apple\nFries\nHamburger\nPepsi";
     private final static String summaryMessage = "At the end of each day/week, we will provide you with insights on what you ate!";
-    private final static String sendHelpText = "Text HELP to see a list of commands.";
+    private final static String sendHelpText = "Text COMMANDS to see a list of commands.";
     private final static String listOfCommands = "List of Commands\nSummary: Sends the foods you've eaten today.\nDone: Sends a report of all the foods you've eaten in the past day. (Can only be sent once a day)\nDelete: deletes the most recent instance of a food you specify. ex: 'Delete Pizza'.";
 
 
@@ -45,7 +45,7 @@ public class Messages {
     }
 
     public static void setSendHelpText(String to){
-        sendTextMessage(to, sendHelpText);
+        sendTextMessage(to, listOfCommands);
     }
 
     public static void sendFoodList(String to){
@@ -57,7 +57,7 @@ public class Messages {
         if (deleted) {
             sendTextMessage(to, "The most recent instance of " + foodToDelete + " has been deleted.");
         } else {
-            Messages.sendTextMessage(to, "No recent instance of " + foodToDelete + " found to delete.");
+            sendTextMessage(to, "No recent instance of " + foodToDelete + " found to delete.");
         }
     }
 
