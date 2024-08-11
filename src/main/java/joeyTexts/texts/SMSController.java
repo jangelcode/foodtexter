@@ -1,12 +1,17 @@
 package joeyTexts.texts;
 
+import joeyTexts.Data.DataAnalyzer;
 import joeyTexts.util.Cache;
 import joeyTexts.util.DatabaseUtil;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
+
 @RestController
 @RequestMapping("/")
 public class SMSController {
+
+    DataAnalyzer dataAnalyzer = new DataAnalyzer();
 
     @PostMapping(value = "/sendSMS", produces = "application/xml")
     public String receiveSms(@RequestBody String request, @RequestParam("From") String from, @RequestParam("Body") String body) {
@@ -29,7 +34,7 @@ public class SMSController {
                 Messages.sendTextMessage(from, "Here is your daily summary:");
                 break;
             case "weekly":
-                Messages.sendTextMessage(from, "Here is your weekly summary:");
+                Messages.sendTextMessage(from, dataAnalyzer.getWeeklyFoods(from));
                 break;
             default:
                 if (body.toLowerCase().startsWith("delete ")) {
