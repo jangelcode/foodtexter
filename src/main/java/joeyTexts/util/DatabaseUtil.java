@@ -1,6 +1,8 @@
 package joeyTexts.util;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -37,17 +39,15 @@ public class DatabaseUtil {
         }
     }
 
-
     public static void storeFoodInDatabase(String food, String phoneNumber) {
         String logFoodQuery = "INSERT INTO foods (phone, food, recorded_at) VALUES (?, ?, NOW() AT TIME ZONE 'MST' AT TIME ZONE 'UTC')";
-        HashSet<String> setOfFood = extractWords(food);
-        if (setOfFood.isEmpty()){
+        ArrayList<String> arrayOfFood = extractWords(food);
+        if (arrayOfFood.isEmpty()) {
             return;
         }
 
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(logFoodQuery)){
-
-            for(String foodItem : setOfFood) {
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(logFoodQuery)) {
+            for (String foodItem : arrayOfFood) {
                 preparedStatement.setString(1, phoneNumber);
                 preparedStatement.setString(2, foodItem);
                 preparedStatement.executeUpdate();
@@ -57,21 +57,10 @@ public class DatabaseUtil {
         }
     }
 
-    public static HashSet<String> extractWords(String text) {
+    public static ArrayList<String> extractWords(String text) {
         //split the text on commas, semicolons, or any whitespace characters
         String[] words = text.split("[,\n]+");
-
-        // Create a HashSet to store the words without duplicates
-        HashSet<String> wordSet = new HashSet<>();
-
-        // Iterate over the array of words and add them to the HashSet
-        for (String word : words) {
-            if (!word.isEmpty()) { // Check to make sure the string is not empty
-                wordSet.add(word);
-            }
-        }
-
-        return wordSet;
+        return new ArrayList<>(Arrays.asList(words));
     }
 
     public static String getDailyFood(String phoneNumber) {
@@ -138,6 +127,5 @@ public class DatabaseUtil {
         }
         return phoneNumbers;
     }
-
 
 }
