@@ -74,13 +74,36 @@ public class DataAnalyzer {
             insights.append("Top 3 most frequently eaten foods:\n");
             for (int i = 0; i < Math.min(3, sortedFoodCount.size()); i++) {
                 Map.Entry<String, Integer> entry = sortedFoodCount.get(i);
-                insights.append(entry.getKey()).append(": ").append(entry.getValue()).append(" times\n");
+                insights.append(entry.getKey()).append("- ").append(entry.getValue()).append(" times\n");
             }
         } else {
             insights.append("No valid food data available.\n");
         }
 
         return insights.toString();
+    }
+
+    public static String analyzeEatingTimes(String phoneNumber) {
+        String timeQuery = "SELECT EXTRACT(HOUR FROM recorded_at) AS hour, COUNT(*) AS count FROM foods WHERE phone = ? AND recorded_at BETWEEN (NOW() AT TIME ZONE 'MST' - INTERVAL '7 days') AND NOW() AT TIME ZONE 'MST' GROUP BY hour";
+    
+        StringBuilder eatingPattern = new StringBuilder();
+        try (Connection connection = getConnection();
+             PreparedStatement selectStatement = connection.prepareStatement(timeQuery)) {
+            
+            selectStatement.setString(1, phoneNumber);
+            
+            try (ResultSet resultSet = selectStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    int hour = resultSet.getInt("hour");
+                    int count = resultSet.getInt("count");
+                    eatingPattern.append("Hour: ").append(hour).append(" - ").append(count).append(" meals\n");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "";
+        }
+        return eatingPattern.toString();
     }
 }
 

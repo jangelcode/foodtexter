@@ -3,6 +3,8 @@ package joeyTexts.texts;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+
+import joeyTexts.Data.DataAnalyzer;
 import joeyTexts.util.DatabaseUtil;
 
 public class Messages {
@@ -14,8 +16,9 @@ public class Messages {
     private final static String foodList = "Apple\nFries\nHamburger\nPepsi";
     private final static String summaryMessage = "At the end of each day/week, we will provide you with insights on what you ate!";
     private final static String sendHelpText = "Text COMMANDS to see a list of commands.";
-    private final static String listOfCommands = "List of Commands\nDaily: Sends the foods you've eaten today.\nWeekly: Sends the foods you've eaten this week\nDelete: deletes the most recent instance of a food you specify. ex: 'Delete Pizza'.";
-
+    private final static String listOfCommands = "List of Commands\nDaily: Sends the foods you've eaten today.\nWeekly: Sends the foods you've eaten this week"
+    + "\nDelete: deletes the most recent instance of a food you specify. ex: 'Delete Pizza'. \nTimes: provides insight on your eating times.";
+    
 
     public static void signUp(String phoneNumber) {
         try {
@@ -58,6 +61,15 @@ public class Messages {
             sendTextMessage(to, "The most recent instance of " + foodToDelete + " has been deleted.");
         } else {
             sendTextMessage(to, "No recent instance of " + foodToDelete + " found to delete.");
+        }
+    }
+
+    public static void analyzeEatingTimes(String to){
+        String eatingTimes = DataAnalyzer.analyzeEatingTimes(to);
+        if (eatingTimes.isEmpty()) {
+            sendTextMessage(to, "Can't Analyze eating times");
+        } else {
+            sendTextMessage(to, eatingTimes);
         }
     }
 

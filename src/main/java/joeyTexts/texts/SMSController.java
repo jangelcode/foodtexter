@@ -40,6 +40,8 @@ public class SMSController {
                 break;
             case "insights":
                 Messages.sendTextMessage(from, dataAnalyzer.analyzeWeeklyFoods(from, dataAnalyzer.getWeeklyFoods(from)));
+            case "times":
+                Messages.analyzeEatingTimes(from);
             default:
                 DatabaseUtil.storeFoodInDatabase(body, from);
                 break;
