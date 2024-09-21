@@ -5,8 +5,6 @@ import joeyTexts.util.Cache;
 import joeyTexts.util.DatabaseUtil;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.crypto.Data;
-
 @RestController
 @RequestMapping("/")
 public class SMSController {
